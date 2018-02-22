@@ -1,0 +1,22 @@
+logging:
+  level: INFO
+  loggers:
+    com.http2.examples: DEBUG
+server:
+  gzip:
+    bufferSize: 8KiB
+  applicationConnectors:
+    - type: h2
+      port: 8445
+      maxConcurrentStreams: 1024
+      initialStreamRecvWindow: 65535
+      keyStorePath: /Users/sd023192/testingkeystore
+      keyStorePassword: password
+      trustStorePath: /Users/sd023192/testingkeystore
+      trustStorePassword: password
+    - type: https
+      port: 8443
+      keyStorePath: /Users/sd023192/testingkeystore
+      keyStorePassword: password
+      validateCerts: false
+
