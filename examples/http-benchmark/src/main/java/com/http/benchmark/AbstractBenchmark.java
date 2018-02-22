@@ -13,6 +13,7 @@ import okio.Buffer;
 import okio.BufferedSink;
 import okio.GzipSink;
 import okio.Okio;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.RandomStringGenerator;
 
 import javax.net.ssl.SSLContext;
@@ -30,7 +31,10 @@ import java.util.stream.IntStream;
 
 import static org.eclipse.jetty.util.ssl.SslContextFactory.TRUST_ALL_CERTS;
 
-/** @author Stephen Durfey */
+/**
+ * @author Stephen Durfey
+ * @author Shradha Khard
+ */
 public abstract class AbstractBenchmark implements Runnable {
 
   @Option(
@@ -73,7 +77,7 @@ public abstract class AbstractBenchmark implements Runnable {
     name = {"-v", "--size"},
     description = "size of each entity during the upload in bytes; defaults to 1500"
   )
-  public int payloadSize = 1500;
+  public int payloadSize;
 
   @Option(
     type = OptionType.COMMAND,
@@ -250,6 +254,10 @@ public abstract class AbstractBenchmark implements Runnable {
 
   private void printResults(List<Integer> entityCounts) throws IOException {
     // create CSV writer
+    if(StringUtils.isEmpty(resultsOutputDir)){
+        System.out.println("No output directory to write the results");
+        return;
+    }
     System.out.println("Writing metrics to file [" + resultsOutputDir + "]");
     try (CSVWriter writer = new CSVWriter(new FileWriter(resultsOutputDir))) {
       writer.writeNext(getHeader().split(","));
